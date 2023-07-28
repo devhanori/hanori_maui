@@ -1,9 +1,28 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Collections.ObjectModel;
 
 namespace Hanori.Maui.Memo.Models
 {
-    public class AllMemos : DbContext
+    public class AllMemos : Manager.EFCoreManager<MemoDbContext>
+    {
+
+        public ObservableCollection<MemoDbContext> Memos { get; private set; }
+
+        public void UpdateMemos()
+        {
+            Memos.Clear();
+            Memos = new ObservableCollection<MemoDbContext>(ReadAll());
+        }
+
+        public AllMemos()
+        {
+
+        }
+    }
+
+
+    public class MemoDbContext : DbContext
     {
         DbSet<Memo> Memos { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
