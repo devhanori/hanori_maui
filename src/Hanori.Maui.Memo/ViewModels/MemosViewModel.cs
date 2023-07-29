@@ -9,21 +9,22 @@ namespace Hanori.Maui.Memo.ViewModels
         public ObservableCollection<ViewModels.MemoViewModel> Memos { get; }
 
         public MemosViewModel()
-        { 
-        
+        {
+
         }
 
         #region RelayCommand
         [RelayCommand]
-        private void New(object obj)
+        private async Task New(object obj)
         {
-
+            await Shell.Current.GoToAsync(nameof(Views.MemoPage));
         }
 
         [RelayCommand]
-        private void SelectMemo(object obj)
+        private async Task SelectMemo(ViewModels.MemoViewModel memo)
         {
-
+            if (memo != null)
+                await Shell.Current.GoToAsync($"{nameof(Views.MemoPage)}?load={memo.Name}");
         }
         #endregion RelayCommand
     }

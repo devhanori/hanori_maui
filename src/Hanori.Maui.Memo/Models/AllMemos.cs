@@ -17,17 +17,17 @@ namespace Hanori.Maui.Memo.Models
 
         public AllMemos()
         {
-
+            UpdateMemos();
         }
     }
 
 
     public class MemoDbContext : DbContext
     {
-        DbSet<Memo> Memos { get; set; }
+        public DbSet<MemoItem> Memos { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var connectionString = "";
+            var connectionString = "server=makerhan.synology.me;port=3307;user=orange;password=Allsense1!;database=Orange";
             var serverVersion = new MariaDbServerVersion(new Version(10, 3, 2));
             optionsBuilder.UseMySql(connectionString, serverVersion)
                                 .LogTo(Console.WriteLine, LogLevel.Information)
