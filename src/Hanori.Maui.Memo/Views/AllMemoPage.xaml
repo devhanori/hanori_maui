@@ -20,7 +20,7 @@
                     ItemsSource="{Binding Memos}"
                     Margin="20"
                     SelectionMode="Single"
-                    SelectionChangedCommand="{Binding SelectNoteCommand}"
+                    SelectionChangedCommand="{Binding SelectMemoCommand}"
                     SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}">
         <CollectionView.ItemsLayout>
             <LinearItemsLayout Orientation="Vertical" ItemSpacing="10"/>

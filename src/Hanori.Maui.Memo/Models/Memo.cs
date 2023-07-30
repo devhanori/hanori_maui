@@ -1,57 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Hanori.Maui.Memo.Manager;
 
 namespace Hanori.Maui.Memo.Models
 {
-
-    public class Memo : Manager.EFCoreManager<MemoDbContext>
+    [Table("Memo")]
+    public class Memo
     {
-        public string Name { get; set; }
-        public DateTime Date { get; set; }
-        public string Text { get; set; }
-
-        private readonly MemoDbContext _dbContext;
         public Memo()
         {
             _dbContext = new MemoDbContext();
-        }
-
-        public void Save()
-        {
-            if (ReadOne(Name) != null)
-            {
-                var item = new MemoItem()
-                {
-                    Name = Name,
-                    Date = Date,
-                    Text = Text
-                };
-
-                _dbContext.Memos.Add(item);
-                _dbContext.SaveChanges();
-            }
-        }
-
-        public List<DbSet<MemoItem>> LoadAll()
-        {
-            return ReadAll()
-                .Select(n => n.Memos)
-                .ToList();
-        }
-    }
-
-    [Table("Memo")]
-    public class MemoItem
-    {
-        public MemoItem()
-        {
             Name = Path.GetRandomFileName();
             Date = DateTime.Now;
             Text = string.Empty;
@@ -65,9 +22,51 @@ namespace Hanori.Maui.Memo.Models
         [Column(TypeName = "varchar(1000)")]
         public string Text { get; set; }
 
+        private readonly MemoDbContext _dbContext;
+
+        public Memo(string Name)
+        {
+            _dbContext = new MemoDbContext();
+            if(_dbContext.Memos.Find(Name) != null)
+            {
+                this.Name = Name;
+                this.Date = _dbContext.Memos.Find(Name).Date;
+                this.Text = _dbContext.Memos.Find(Name).Text;
+            }
+            else
+            {
+                this.Name = Name;
+                this.Date = DateTime.Now;
+                this.Text = "";
+            }
+        }
+
         public void Save()
         {
-            
+            if (_dbContext.Memos.Find(Name) != null)
+            {
+                var item = new Memo()
+                {
+                    Name = Name,
+                    Date = Date,
+                    Text = Text
+                };
+
+                _dbContext.Memos.Add(item);
+                _dbContext.SaveChanges();
+            }
+        }
+
+        public static List<Memo> ReadAll()
+        {
+            var context = new MemoDbContext();
+            return context.Memos.ToList();
+        }
+
+        public static Memo ReadOne(string Name)
+        {
+            var context = new MemoDbContext();
+            return context.Memos.Find(Name);
         }
     }
 }
