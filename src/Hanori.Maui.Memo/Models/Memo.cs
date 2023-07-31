@@ -45,6 +45,13 @@ namespace Hanori.Maui.Memo.Models
         {
             if (_dbContext.Memos.Find(Name) != null)
             {
+                _dbContext.Memos.Find(Name).Date = this.Date;
+                _dbContext.Memos.Find(Name).Name = this.Name;
+                _dbContext.Memos.Find(Name).Text = this.Text;
+                _dbContext.SaveChanges();
+            }
+            else
+            {
                 var item = new Memo()
                 {
                     Name = Name,
@@ -55,6 +62,16 @@ namespace Hanori.Maui.Memo.Models
                 _dbContext.Memos.Add(item);
                 _dbContext.SaveChanges();
             }
+        }
+
+        public void Delete()
+        {
+            if (_dbContext.Memos.Find(Name) != null)
+            {
+                var entity = _dbContext.Memos.Find(Name);
+                _dbContext.Remove(entity);
+            }
+            _dbContext.SaveChanges();
         }
 
         public static List<Memo> ReadAll()

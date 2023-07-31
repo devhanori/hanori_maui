@@ -43,6 +43,13 @@ namespace Hanori.Maui.Memo.ViewModels
             await Shell.Current.GoToAsync($"..?saved={_memo.Name}");
         }
 
+        [RelayCommand]
+        private async Task Delete()
+        {
+            _memo.Delete();
+            await Shell.Current.GoToAsync($"..?deleted={_memo.Name}");
+        }
+
         void IQueryAttributable.ApplyQueryAttributes(IDictionary<string, object> query)
         {
             if (query.ContainsKey("load"))
